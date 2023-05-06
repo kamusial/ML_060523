@@ -25,12 +25,19 @@ drzewo(10)
 
 model = DecisionTreeClassifier()
 params = {
-    'max_depth': range(2, 11, 2),
-    'max_features': range(2, 14, 2),
-    'min_sample_split': [2, 4, 6],
+    'max_depth': range(2, 15),
+    'max_features': range(2, 14),
+    'min_samples_split': [2, 3, 4, 5, 6],
     'random_state': [0],
     'criterion': ['gini', 'entropy', 'log_loss']
 }
 
 grid = GridSearchCV(model, params, scoring='accuracy', cv=10, verbose=1)
 grid.fit(X_train, y_train)
+
+print(grid.best_params_)
+print(grid.best_score_)
+print(grid.best_estimator_)
+print(pd.DataFrame(grid.best_estimator_.feature_importances_,X.columns).sort_values(0, ascending=False))
+y_pred = grid.best_estimator_.predict(X_test)
+print(pd.DataFrame(confusion_matrix(y_test, y_pred)))
